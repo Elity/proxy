@@ -8,7 +8,8 @@ from starlette.background import BackgroundTask
 from openai_forward.tool import env2list
 
 class NAIBase:
-    BASE_URL = "https://api.novelai.net"
+    API_NOVEL = "https://api.novelai.net"
+    TEXT_NOVEL = "https://text.novelai.net"
     IP_WHITELIST = env2list("IP_WHITELIST", sep=" ")
     IP_BLACKLIST = env2list("IP_BLACKLIST", sep=" ")
 
@@ -28,7 +29,9 @@ class NAIBase:
 
     @classmethod
     async def _reverse_proxy(cls, request: Request):
-        client = httpx.AsyncClient(base_url=cls.BASE_URL, http1=True, http2=False)
+        body = await request.json()
+        BASE_URL = cls.API_NOVEL if 'clio' in body['model'] else cls.TEXT_NOVEL
+        client = httpx.AsyncClient(base_url=BASE_URL, http1=True, http2=False)
         url_path = request.url.path
         url = httpx.URL(path=url_path, query=request.url.query.encode("utf-8"))
         headers = dict(request.headers)
@@ -48,7 +51,7 @@ class NAIBase:
         except (httpx.ConnectError, httpx.ConnectTimeout) as e:
             error_info = (
                 f"{type(e)}: {e} | "
-                f"Please check if host={request.client.host} can access [{cls.BASE_URL}] successfully?"
+                f"Please check if host={request.client.host} can access [{BASE_URL}] successfully?"
             )
             logger.error(error_info)
             raise HTTPException(
