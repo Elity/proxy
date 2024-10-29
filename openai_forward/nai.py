@@ -31,6 +31,20 @@ class NAIBase:
     async def _reverse_proxy(cls, request: Request):
         body = await request.json()
         BASE_URL = cls.API_NOVEL if 'clio' in body['model'] else cls.TEXT_NOVEL
+        if 'parameters' in body and body['parameters'] is not None:
+            if 'repetition_penalty_whitelist' in body['parameters']:
+                repetition_penalty_whitelist = body['parameters']['repetition_penalty_whitelist'] if body['parameters']['repetition_penalty_whitelist'] is not None else []
+                new_whitelist = []
+                for sublist in repetition_penalty_whitelist:
+                    if isinstance(sublist, int):
+                        new_whitelist.append(sublist)
+                    else:
+                        new_whitelist.extend(sublist)
+                body['parameters']['repetition_penalty_whitelist'] = new_whitelist
+            if 'max_length' in body['parameters']:
+                body['parameters']['max_length'] = min(int(body['parameters']['max_length']), 150) if body['parameters']['max_length'] is not None else 150
+            if 'min_length' in body['parameters']:
+                body['parameters']['min_length'] = min(int(body['parameters']['min_length']), 150) if body['parameters']['min_length'] is not None else 50
         client = httpx.AsyncClient(base_url=BASE_URL, http1=True, http2=False)
         url_path = request.url.path
         url = httpx.URL(path=url_path, query=request.url.query.encode("utf-8"))
@@ -42,8 +56,8 @@ class NAIBase:
         req = client.build_request(
             request.method,
             url,
+            json=body,
             headers=auth_headers_dict,
-            content=request.stream(),
             timeout=cls.timeout,
         )
         try:

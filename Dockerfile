@@ -10,9 +10,11 @@ RUN apk update && \
     mkdir -p /usr/share/zoneinfo/America/ && \
     ln -s /etc/localtime /usr/share/zoneinfo/America/New_York
 
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . /home/openai-forward
 WORKDIR /home/openai-forward
-RUN pip install --no-cache-dir -r requirements.txt
 
 ENV ssl_keyfile="/home/openai-forward/privkey.pem"
 ENV ssl_certfile="/home/openai-forward/fullchain.pem"

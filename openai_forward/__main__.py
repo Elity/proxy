@@ -48,7 +48,7 @@ class Cli:
 
         ssl_keyfile = os.environ.get("ssl_keyfile", 'privkey.pem') or None
         ssl_certfile = os.environ.get("ssl_certfile", 'fullchain.pem') or None
-        port = os.environ.get("port", 443) or 443
+        port = int(os.environ.get("port", 443)) or 443
         uvicorn.run(
             app="openai_forward.app:app",
             host="0.0.0.0",
