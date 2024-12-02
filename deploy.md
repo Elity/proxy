@@ -125,7 +125,7 @@ Render的免费计划: 每月750小时免费实例时间(意味着单个实例�
 
 ## Vercel 一键部署
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbeidongjiedeguang%2Fopenai-forward&project-name=openai-forward&repository-name=openai-forward&framework=other)  
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FElity%2Fopenai-forward&project-name=openai-forward&repository-name=openai-forward&framework=other)  
 因python的部署方式在vercel上存在诸多限制，因此现在将Vercel部署方式切换为直接转发。
 
 1. 点击按钮即可一键免费部署  
