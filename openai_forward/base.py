@@ -12,7 +12,7 @@ from .tool import env2list
 
 
 class OpenaiBase:
-    BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com").strip()
+    BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.deepseek.com").strip()
     ROUTE_PREFIX = os.environ.get("ROUTE_PREFIX", "").strip()
     _openai_api_key_list = env2list("OPENAI_API_KEY", sep=" ")
     _cycle_api_key = cycle(_openai_api_key_list)
